@@ -2,9 +2,9 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
 
-DB_URL = "postgresql+psycopg://postgres:adminpass@127.0.0.1:5432/app_db"
+DB_URL = "sqlite:///banco.db"
 
-engine = create_engine(DB_URL,pool_pre_ping=True)
+engine = create_engine(DB_URL)
 
 session = sessionmaker(bind=engine)
 
