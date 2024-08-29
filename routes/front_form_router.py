@@ -23,4 +23,8 @@ def post_front(fname:str=Form(...),cpf:str= Form(...),password:str= Form(...),db
     uc = User_use_cases(db_session=db_session)
     uc.post_user(person)
     return person
+
+@front_router.get("/notes")
+def read_front(request:Request):
+    return templates.TemplateResponse(request=request,name="oi.html")
     

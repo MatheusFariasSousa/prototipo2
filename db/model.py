@@ -7,6 +7,8 @@ from sqlalchemy import func,ForeignKey
 
 table_registry = registry()
 
+
+
 @table_registry.mapped_as_dataclass
 class User():
     __tablename__="User_db"
@@ -14,6 +16,8 @@ class User():
     name:Mapped[str] = mapped_column("name",nullable=False)
     cpf:Mapped[str] = mapped_column("cpf",nullable=False,unique=True)
     password:Mapped[str] = mapped_column("password",nullable=False)
+    
+    
 
 
 @table_registry.mapped_as_dataclass
@@ -26,6 +30,7 @@ class Notes():
         init=False, server_default=func.now()
     )
     user_id: Mapped[int] = mapped_column(ForeignKey('User_db.id'))
+
 
 
 
