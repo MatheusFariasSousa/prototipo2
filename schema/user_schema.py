@@ -8,3 +8,6 @@ class User_schema(BaseModel):
 class User_Schema_Output(BaseModel):
     name:str
     cpf:str
+
+
+
