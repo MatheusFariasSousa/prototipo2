@@ -1,11 +1,26 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
+<html>
 <body>
-    <p>Ola mundo</p>
+
+<h2>Note</h2>
+
+<form action="/front/notes", method="post">
+  <label for="title">Title:</label><br>
+  <input type="text" id="title" name="title"><br>
+  <label for="note">Note:</label><br>
+  <input type="text" id="note" name="note"><br><br>
+  <input type="submit" value="Submit">
+</form> 
+<ul>
+    <h3>List of Notes</h3>
+    {% for note in notes %}
+        <li>{{ note.title }}: {{ note.text }}</li>
+    {% else %}
+        <li>No notes available</li>
+    {% endfor %}
+</ul>
+
+
 </body>
 </html>
+
