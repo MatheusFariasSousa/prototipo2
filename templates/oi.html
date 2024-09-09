@@ -14,7 +14,7 @@
 <ul>
     <h3>List of Notes</h3>
     {% for note in notes %}
-        <li>{{ note.title }}: {{ note.text }}</li>
+        <li>{{ note.title }}: {{ note.text }} -- [{{note.created_at}}]</li>
     {% else %}
         <li>No notes available</li>
     {% endfor %}
