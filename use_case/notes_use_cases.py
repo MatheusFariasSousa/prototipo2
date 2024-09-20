@@ -3,6 +3,7 @@ from fastapi import HTTPException,status
 from sqlalchemy.orm import Session
 
 from db.model import Notes
+from db.model import User
 
 from schema.notes_schema import Note_Schema
 
@@ -12,8 +13,9 @@ class Notes_Use_Case:
         self.db_session = db_session
 
 
-    def post_not(self,notes:Note_Schema):
-        notation = Notes(notes.title,notes.text)
+    def post_not(self,notes:Note_Schema,user:User):
+         
+        notation = Notes(notes.title,notes.text,user_id=user.id)
         self.db_session.add(notation)
         try:
             self.db_session.commit()

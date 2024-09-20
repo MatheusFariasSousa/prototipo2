@@ -1,7 +1,7 @@
 from sqlalchemy.orm import registry,mapped_column,Mapped
 from db.connection import engine
 from datetime import datetime
-from sqlalchemy import func
+from sqlalchemy import func,ForeignKey
 
 
 
@@ -29,6 +29,7 @@ class Notes():
     created_at: Mapped[datetime] = mapped_column(
         init=False, server_default=func.now()
     )
+    user_id:Mapped[int] = mapped_column(ForeignKey("User_db.id"))
     
 
 
