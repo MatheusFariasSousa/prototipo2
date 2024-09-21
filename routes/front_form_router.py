@@ -1,4 +1,4 @@
-from fastapi import APIRouter,Form,Depends,status,HTTPException
+from fastapi import APIRouter,Form,Depends,status,HTTPException,Response
 from fastapi.responses import RedirectResponse
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
@@ -36,13 +36,17 @@ def post_front(fname:str=Form(...),cpf:str= Form(...),password:str= Form(...),db
     return person
 
 @front_router.post("/get-token")
-def get_token(lname:str=Form(...),lpassword:str=Form(...),db_session:Session = Depends(get_conection)):
-   
+def get_token(response:Response,forms:OAuth2PasswordRequestForm = Depends(),db_session:Session = Depends(get_conection)):
+    lname = forms.username
+    lpassword = forms.password 
+    
     user = db_session.query(User).where(User.name==lname).first()
     if not user or not crypt.verify(lpassword,user.password):
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,detail="Usuario ou senha incorreto")
     access_token = create_access_token(data={"sub":lname})
+    response.set_cookie(key="access_token", value=access_token, httponly=True)
     return {"access_token": access_token,"token_type":"bearer"}
+    
 
 
 
