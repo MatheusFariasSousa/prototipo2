@@ -11,7 +11,7 @@
 <html>
 <body>
 
-<h2>HTML Forms</h2>
+<h2>Criar Conta</h2>
 
 <form action="/front/result-form" method="post">
   <label for="fname">Name:</label><br>
@@ -23,7 +23,18 @@
   <input type="submit" value="Submit">
   
 </form> 
-<a href="/front/notes"> ir para lá</a>
+
+<h2>Entrar</h2>
+
+<form action="/front/get-token" method="post">
+  <label for="lname">Name:</label><br>
+  <input type="text" id="lname" name="lname"><br>
+  <label for="lpassword">Password:</label><br>
+  <input type="text" id="lpassword" name="lpassword"><br><br>
+  <input type="submit" value="Submit">
+  
+</form> 
+<a href="/front/notes"> ir para suas notas</a>
 
 
 
