@@ -4,13 +4,14 @@
 
 <h2>Note</h2>
 
-<form action="/front/notes", method="post">
+<form id="note-form" action="/front/notes", method="post">
   <label for="title">Title:</label><br>
   <input type="text" id="title" name="title"><br>
   <label for="note">Note:</label><br>
   <input type="text" id="note" name="note"><br><br>
   <input type="submit" value="Submit">
 </form> 
+    <p>{{ current-user}}</p>
 <ul>
     <h3>List of Notes</h3>
     {% for note in notes %}
@@ -19,6 +20,67 @@
         <li>No notes available</li>
     {% endfor %}
 </ul>
+
+
+
+<script>
+    // Recupera o token do localStorage
+    const token = localStorage.getItem('access_token');
+
+    if (!token) {
+        alert('Você precisa estar logado para acessar esta página!');
+        window.location.href = '/login'; // Redireciona para a página de login
+    } else {
+        // Faz uma requisição para obter informações do usuário
+        fetch('/front/current-user', {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}` // Envia o token no cabeçalho
+            }
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Erro ao obter informações do usuário');
+            }
+            return response.json();
+        })
+        .then(data => {
+            // Exibe as informações do usuário na página
+            document.getElementById('user-info').innerText = `Usuário: ${data.username}`;
+        })
+        .catch(error => {
+            console.error('Erro:', error);
+            alert('Não foi possível carregar as informações do usuário.');
+        });
+    }
+
+    // Adiciona um evento ao formulário para enviar uma nova nota
+    document.getElementById('note-form').addEventListener('submit', async (event) => {
+        event.preventDefault(); // Impede o envio padrão do formulário
+
+        const title = document.getElementById('title').value;
+        const note = document.getElementById('note').value;
+
+        const response = await fetch('/front/notes', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'Authorization': `Bearer ${token}` // Envia o token no cabeçalho
+            },
+            body: new URLSearchParams({
+                'title': title,
+                'note': note
+            })
+        });
+
+        if (response.ok) {
+            window.location.reload(); // Recarrega a página para atualizar a lista de notas
+        } else {
+            alert('Erro ao adicionar nota. Verifique se você está autenticado.');
+        }
+    });
+</script>
+
 
 
 </body>

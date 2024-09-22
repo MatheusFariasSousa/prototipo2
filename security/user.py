@@ -10,7 +10,7 @@ from jwt import encode, decode
 from jwt.exceptions import DecodeError   
 
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/user/token")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/front/get-token")
 
 
 
@@ -33,7 +33,7 @@ def get_current_user(db_session:Session = Depends(get_conection),token:str = Dep
         payload = decode(token,SECRET_KEY,algorithms=[ALGORITHM])
         username = payload.get("sub")
         if not username:
-            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
+            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,detail="teste")
         token_data = TokenData(username=username)
     except DecodeError:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)

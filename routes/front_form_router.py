@@ -37,27 +37,14 @@ def post_front(fname:str=Form(...),cpf:str= Form(...),password:str= Form(...),db
 
 @front_router.post("/get-token")
 def get_token(response:Response,forms:OAuth2PasswordRequestForm = Depends(),db_session:Session = Depends(get_conection)):
-    lname = forms.username
-    lpassword = forms.password 
+   
     
-    user = db_session.query(User).where(User.name==lname).first()
-    if not user or not crypt.verify(lpassword,user.password):
+    user = db_session.query(User).where(User.name==forms.username).first()
+    if not user or not crypt.verify(forms.password,user.password):
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,detail="Usuario ou senha incorreto")
-    access_token = create_access_token(data={"sub":lname})
-    response.set_cookie(key="access_token", value=access_token, httponly=True)
+    access_token = create_access_token(data={"sub":forms.username})
     return {"access_token": access_token,"token_type":"bearer"}
     
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -72,6 +59,13 @@ def post_note(title:str=Form(...),note:str=Form(...),db_session:Session = Depend
 def read_notes(request:Request,db_session:Session = Depends(get_conection),current_user:User = Depends(get_current_user)):
     notes = db_session.query(Notes).where(Notes.user_id==current_user.id)
     return templates.TemplateResponse("oi.html",{"request":request,"notes":notes})
+
+@front_router.get("/see")
+def read_token(request:Request):
+    return templates.TemplateResponse("vertoken.html",{"request":request,})
+
+
+
 
     
 

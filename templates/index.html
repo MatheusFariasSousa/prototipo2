@@ -26,15 +26,43 @@
 
 <h2>Entrar</h2>
 
-<form action="/front/get-token" method="post">
-  <label for="lname">Name:</label><br>
-  <input type="text" id="lname" name="lname"><br>
-  <label for="lpassword">Password:</label><br>
-  <input type="text" id="lpassword" name="lpassword"><br><br>
+<form id="login-form" action="/front/get-token" method="post">
+  <label for="username">Name:</label><br>
+  <input type="text" id="username" name="username"><br>
+  <label for="password">Password:</label><br>
+  <input type="text" id="password" name="password"><br><br>
   <input type="submit" value="Login">
   
 </form> 
-<a href="/front/notes"> ir para suas notas</a>
+<a href="/front/notes"> ir para suas notas</a><br>
+
+<a href="/front/see"> ver token no storage</a>
+
+<script>
+  const loginForm = document.getElementById('login-form');
+
+  loginForm.addEventListener('submit', async (event) => {
+      event.preventDefault(); // Impede o recarregamento da página
+
+      const formData = new FormData(loginForm); // Captura os dados do formulário
+
+      // Envia a requisição para o backend
+      const response = await fetch('/front/get-token', {
+          method: 'POST',
+          body: new URLSearchParams(formData) // Envia o formulário como URL-encoded
+      });
+
+      if (response.ok) {
+          const data = await response.json();
+
+          // Salva o token no localStorage
+          localStorage.setItem('access_token', data.access_token);
+          alert("Token armazenado com sucesso no localStorage!");
+      } else {
+          alert("Erro ao obter o token.");
+      }
+  });
+</script>
 
 
 
