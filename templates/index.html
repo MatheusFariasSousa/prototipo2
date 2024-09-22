@@ -34,30 +34,36 @@
   <input type="submit" value="Login">
   
 </form> 
-<a href="/front/notes"> ir para suas notas</a><br>
+<br>
+<a id="notes-link" href="#">Ir para suas notas</a><br>
 
-<a href="/front/see"> ver token no storage</a>
+
 
 <script>
   const loginForm = document.getElementById('login-form');
 
   loginForm.addEventListener('submit', async (event) => {
-      event.preventDefault(); // Impede o recarregamento da página
+      event.preventDefault(); 
 
-      const formData = new FormData(loginForm); // Captura os dados do formulário
+      const formData = new FormData(loginForm); 
 
-      // Envia a requisição para o backend
+      
       const response = await fetch('/front/get-token', {
           method: 'POST',
-          body: new URLSearchParams(formData) // Envia o formulário como URL-encoded
+          body: new URLSearchParams(formData) 
       });
 
       if (response.ok) {
           const data = await response.json();
 
-          // Salva o token no localStorage
+          
           localStorage.setItem('access_token', data.access_token);
           alert("Token armazenado com sucesso no localStorage!");
+
+         
+          const token = data.access_token; 
+          const seeTokenLink = document.getElementById('notes-link');
+          seeTokenLink.href = `/front/notes/${token}`; 
       } else {
           alert("Erro ao obter o token.");
       }

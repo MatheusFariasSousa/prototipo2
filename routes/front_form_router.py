@@ -11,7 +11,7 @@ from schema.user_schema import User_schema,User_Schema_Output
 from schema.notes_schema import Note_Schema
 from use_case.user_use_cases import User_use_cases
 from use_case.notes_use_cases import Notes_Use_Case
-from security.user import create_access_token,get_current_user
+from security.user import create_access_token,get_current_user,decode_token,get_user_from_payload
 
 from passlib.context import CryptContext
 
@@ -49,20 +49,21 @@ def get_token(response:Response,forms:OAuth2PasswordRequestForm = Depends(),db_s
 
 
 @front_router.post("/notes")
-def post_note(title:str=Form(...),note:str=Form(...),db_session:Session = Depends(get_conection),current_user:User = Depends(get_current_user)):
+def post_note(token:str=Form(...),title:str=Form(...),note:str=Form(...),db_session:Session = Depends(get_conection)):
+    payload = decode_token(token=token)
+    current_user = get_user_from_payload(db_session=db_session,payload=payload)
     notation = Note_Schema(title=title,text=note)
     uc= Notes_Use_Case(db_session=db_session)
     uc.post_not(notation,current_user)
-    return RedirectResponse(url="/front/notes", status_code=status.HTTP_303_SEE_OTHER)
+    return RedirectResponse(url=f"/front/notes/{token}", status_code=status.HTTP_303_SEE_OTHER)
 
-@front_router.get("/notes")
-def read_notes(request:Request,db_session:Session = Depends(get_conection),current_user:User = Depends(get_current_user)):
+@front_router.get("/notes/{token}")
+def read_notes(request:Request,token:str,db_session:Session = Depends(get_conection)):
+    payload = decode_token(token=token)
+    current_user = get_user_from_payload(db_session=db_session,payload=payload)
     notes = db_session.query(Notes).where(Notes.user_id==current_user.id)
-    return templates.TemplateResponse("oi.html",{"request":request,"notes":notes})
+    return templates.TemplateResponse("oi.html",{"request":request,"notes":notes,"user":current_user,"token": token})
 
-@front_router.get("/see")
-def read_token(request:Request):
-    return templates.TemplateResponse("vertoken.html",{"request":request,})
 
 
 

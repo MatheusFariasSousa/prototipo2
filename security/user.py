@@ -45,6 +45,31 @@ def get_current_user(db_session:Session = Depends(get_conection),token:str = Dep
     return user
     
 
+def decode_token(token: str):
+    try:
+        payload = decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        return payload
+    except DecodeError:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Token inválido")
+
+# Função para buscar o usuário com base no payload
+def get_user_from_payload(db_session: Session, payload: dict):
+    username = payload.get("sub")
+    if not username:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Usuário não encontrado no token")
+
+    user = db_session.query(User).filter(User.name == username).first()
+    if not user:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
+
+    return user
+
+# Função para obter o usuário atual
+def get_current_user(db_session: Session = Depends(get_conection), token: str = Depends(oauth2_scheme)):
+    payload = decode_token(token)  # Decodifica o token
+    user = get_user_from_payload(db_session, payload)  # Busca o usuário
+    return user
+
 
 
     

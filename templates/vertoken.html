@@ -11,15 +11,17 @@
 
 <div id="token-info"></div>
 
+<p>{{user}}</p>
+
 <script>
-    // Recupera o token do localStorage
+    
     const token = localStorage.getItem('access_token');
 
     if (token) {
-        // Exibe o token na página
+       
         document.getElementById('token-info').innerText = `Seu token é: ${token}`;
     } else {
-        // Mensagem se o token não estiver presente
+        
         document.getElementById('token-info').innerText = 'Nenhum token encontrado. Você precisa estar logado.';
     }
 </script>
