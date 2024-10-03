@@ -64,6 +64,15 @@ def read_notes(request:Request,token:str,db_session:Session = Depends(get_conect
     notes = db_session.query(Notes).where(Notes.user_id==current_user.id)
     return templates.TemplateResponse("oi.html",{"request":request,"notes":notes,"user":current_user,"token": token})
 
+@front_router.post("/delete-note/{id}")
+def deleteNote(id:int,token:str=Form(...),db_session:Session = Depends(get_conection)):
+    payload = decode_token(token=token)
+    current_user = get_user_from_payload(db_session=db_session,payload=payload)
+    uc = Notes_Use_Case(db_session=db_session)
+    uc.delete_note(id = id,user=current_user)
+    return RedirectResponse(url=f"/front/notes/{token}", status_code=status.HTTP_303_SEE_OTHER)
+
+
 
 
 

@@ -17,6 +17,12 @@
     <h3>List of Notes</h3>
     {% for note in notes %}
         <li>{{ note.title }}: {{ note.text }} -- [{{note.created_at}}]</li>
+
+        <form action="/front/delete-note/{{ note.id }}" method="post" style="display:inline;">
+            <input type="hidden" name="_method" value="delete">
+            <input type="hidden" name="token" value="{{ token }}">
+            <button type="submit">Excluir</button>
+         
     {% else %}
         <li>No notes available</li>
     {% endfor %}
@@ -57,7 +63,30 @@
     window.addEventListener('beforeunload', function() {
     document.getElementById('note-form').reset(); 
 });
-
+/*function deleteNote(noteId) {
+        if (confirm('Você tem certeza que deseja excluir essa nota?')) {
+            fetch(`/front/notes/${noteId}`, {
+                method: 'DELETE',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Erro ao deletar a nota');
+                }
+                return response.json();
+            })
+            .then(data => {
+                alert(data.message);  
+                window.location.reload();  
+            })
+            .catch(error => {
+                console.error('Erro:', error);
+                alert('Erro ao deletar a nota');
+            });
+        }
+    }*/
     
     
 </script>

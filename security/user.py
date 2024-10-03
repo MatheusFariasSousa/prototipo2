@@ -28,7 +28,7 @@ def create_access_token(data:dict):
     encode_jwt = encode(to_encode,SECRET_KEY,algorithm=ALGORITHM)
     return encode_jwt
 
-def get_current_user(db_session:Session = Depends(get_conection),token:str = Depends(oauth2_scheme)):
+"""def get_current_user(db_session:Session = Depends(get_conection),token:str = Depends(oauth2_scheme)):
     try:
         payload = decode(token,SECRET_KEY,algorithms=[ALGORITHM])
         username = payload.get("sub")
@@ -42,7 +42,7 @@ def get_current_user(db_session:Session = Depends(get_conection),token:str = Dep
     if not user:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
     
-    return user
+    return user"""
     
 
 def decode_token(token: str):
@@ -52,7 +52,7 @@ def decode_token(token: str):
     except DecodeError:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Token inválido")
 
-# Função para buscar o usuário com base no payload
+
 def get_user_from_payload(db_session: Session, payload: dict):
     username = payload.get("sub")
     if not username:
@@ -64,10 +64,10 @@ def get_user_from_payload(db_session: Session, payload: dict):
 
     return user
 
-# Função para obter o usuário atual
+
 def get_current_user(db_session: Session = Depends(get_conection), token: str = Depends(oauth2_scheme)):
-    payload = decode_token(token)  # Decodifica o token
-    user = get_user_from_payload(db_session, payload)  # Busca o usuário
+    payload = decode_token(token)  
+    user = get_user_from_payload(db_session, payload)  
     return user
 
 
