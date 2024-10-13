@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="{{ url_for('static', path='/styles.css') }}" rel="stylesheet">
+</head>
+<body>
+    <!DOCTYPE html>
+<html>
+<body>
+
+<h2>Criar Conta</h2>
+
+<form action="/front/result-form" method="post">
+  <label for="fname">Name:</label><br>
+  <input type="text" id="fname" name="fname"><br>
+  <label for="cpf">Cpf:</label><br>
+  <input type="text" id="cpf" name="cpf"><br>
+  <label for="password">Password:</label><br>
+  <input type="text" id="password" name="password"><br><br>
+  <input type="submit" value="Submit">
+  
+</form> 
+
+<h2>Entrar</h2>
+
+<form id="login-form" action="/front/get-token" method="post">
+  <label for="username">Name:</label><br>
+  <input type="text" id="username" name="username"><br>
+  <label for="password">Password:</label><br>
+  <input type="text" id="password" name="password"><br><br>
+  <input type="submit" value="Login">
+  
+</form> 
+<br>
+<a id="notes-link" href="#">Ir para suas notas</a><br>
+
+
+
+<script>
+  const loginForm = document.getElementById('login-form');
+
+  loginForm.addEventListener('submit', async (event) => {
+      event.preventDefault(); 
+
+      const formData = new FormData(loginForm); 
+
+      
+      const response = await fetch('/front/get-token', {
+          method: 'POST',
+          body: new URLSearchParams(formData) 
+      });
+
+      if (response.ok) {
+          const data = await response.json();
+
+          
+          localStorage.setItem('access_token', data.access_token);
+          alert("Token armazenado com sucesso no localStorage!");
+
+         
+          const token = data.access_token; 
+          const seeTokenLink = document.getElementById('notes-link');
+          seeTokenLink.href = `/front/notes/${token}`; 
+      } else {
+          alert("Erro ao obter o token.");
+      }
+  });
+</script>
+
+
+
+</body>
+</html>
+
+
+    
+</body>
+</html>
